@@ -1,51 +1,67 @@
+
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../Style/SearchResult.css'
-import { useParams } from 'react-router-dom';
+import '../Style/SearchResult.css';
+import { useParams, Link } from 'react-router-dom';
+import noimg from '../assets/noimg.png'
 
-let API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzNjNDM4NjliZjM0ZTQzNWQ0MDY5NzY4MDUyNDBmNyIsIm5iZiI6MTcyOTc2MzUwOC4wNSwic3ViIjoiNjcxYTE4YjQ0YmUxNTQ2OWU3MGQ4MzcwIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.fXDghQTS8vSeiuSxWdKyjKENpO3By3SZPH1Q5EBdms0'
+
+let API_KEY = 'f33c43869bf34e435d406976805240f7';
 
 function SearchResults() {
   const { query } = useParams();
   const [results, setResults] = useState([]);
+  const [category, setCategory] = useState('all'); 
+
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+  };
 
   useEffect(() => {
+    
+    let endpoint = `https://api.themoviedb.org/3/search/multi`;
+    if (category !== 'all') {
+      endpoint += `?type=${category}`;
+    }
 
     axios
-      .get(`https://api.themoviedb.org/3/search/multi`, {
-        params: {
-          query: query,
-        },
+      .get(endpoint, {
+        params: { query },
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         },
       })
-      .then((response) => {
-        setResults(response.data.results);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [query]);
+      .then((response) => setResults(response.data.results))
+      .catch((error) => console.error(error));
+  }, [query, category]); 
 
   return (
-    <div className='searchsection'>
+    <div className="searchsection">
       <h1>Search Results for: {query}</h1>
-      <div>
+      <div className="results-container">
         {results.length > 0 ? (
-
           results.map((result) => (
-            <div key={result.id}>
-              <img
-                src={`https://image.tmdb.org/t/p/w500/${result.poster_path}`}
-                alt={result.name || result.title}
-              />
-              {/* <h3>{result.name || result.title}</h3> */}
-            </div>
-
+            <Link to={`/ApiDetails/${result.id}`} key={result.id}>
+              <div className="result-card">
+                <img
+                width={'100px'}
+                  src={
+                    result.poster_path
+                      ? `https://image.tmdb.org/t/p/w500/${result.poster_path}`
+                      : noimg
+                  }
+                  alt={result.name || result.title}
+                  className="result-img"
+                />
+                <p>{result.name || result.title}</p>
+              </div>
+            </Link>
           ))
         ) : (
-          <p>No results found for  {query}</p>
+          <p>No results found for {query}</p>
         )}
       </div>
     </div>

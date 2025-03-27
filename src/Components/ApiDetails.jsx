@@ -47,7 +47,6 @@ function ApiDetails() {
 
     return (
         <div className="api-details-container">
-            <button onClick={handleBackClick} className="back-button">Go Back</button>
             {details && (
                 <div className="details-content">
                     <h1>{details.title || details.name}</h1>
@@ -57,8 +56,14 @@ function ApiDetails() {
                         className="poster-img"
                     />
                     <p>{details.overview}</p>
-                    <p><strong>Release Date:</strong> {details.release_date || details.first_air_date}</p>
-                    <p><strong>Rating:</strong> {details.vote_average}</p>
+                    <p>
+                        <strong>Release Date:</strong>
+                        {details.release_date || details.first_air_date}</p>
+                    <p>   <strong>Rating:</strong>
+                        {details.vote_average}
+                    </p>
+                    <button onClick={handleBackClick} className="back-button">Go Back</button>
+
                 </div>
             )}
         </div>
