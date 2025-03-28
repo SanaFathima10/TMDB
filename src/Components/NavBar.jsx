@@ -1,16 +1,15 @@
 import React from 'react'
 import '../Style/NavBar.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function NavBar() {
+  const navigate = useNavigate();
 
   function display() {
+    navigate('/');
     window.location.reload()
   }
-  //   const handleLogout = () => {
-  //     localStorage.removeItem('isLoggedIn');
-  //     navigate('/login');
-  // };
+
 
 
   return (
@@ -22,15 +21,7 @@ function NavBar() {
 
 
       </div>
-      {/* 
-      <div className='navbar-links'>
-        <ul>
-          <li>Movies</li>
-          <li>TV Shows</li>
-          <li>People</li>
-          <li>More</li>
-        </ul>
-      </div> */}
+
 
       <div className='lgnsgn'>
         <Link to="/login">

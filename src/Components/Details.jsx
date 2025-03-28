@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-let API_KEY = 'f33c43869bf34e435d406976805240f7'; 
+let API_KEY = 'f33c43869bf34e435d406976805240f7';
 
 function Details() {
   const { id } = useParams();
@@ -38,6 +38,7 @@ function Details() {
       });
   }, [id]);
 
+
   if (!details) return <p>Loading...</p>;
 
   return (
@@ -60,3 +61,5 @@ function Details() {
 }
 
 export default Details;
+
+
