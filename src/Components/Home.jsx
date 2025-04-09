@@ -1,30 +1,21 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import '../Style/Api.css';
-import { styled } from 'styled-components';
+import '../Style/Home.css';
 import YouTube from 'react-youtube';
 import noimg from '../assets/noimg.png';
-
-const Grade = styled.div`
-    height: 370px;
-    background-color: black;
-    overflow-x: scroll;
-`;
 
 const API_KEY = 'f33c43869bf34e435d406976805240f7';
 let url = "https://api.themoviedb.org/3/trending/all/day";
 let searchUrl = "https://api.themoviedb.org/3/search/multi";
 
-function Api() {
+function Home() {
     let [data, setData] = useState([]);
     let [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
     let [trail, setTrail] = useState([]);
     let [trailers, setTrailers] = useState({});
     let [searchResults, setSearchResults] = useState([]);
-
 
     const fetchTrendingData = () => {
         axios
@@ -89,6 +80,9 @@ function Api() {
                     },
                 })
                 .then((result) => {
+
+                    console.log(result);
+
                     setSearchResults(result.data.results.slice(0, 5));
                 })
                 .catch((err) => {
@@ -98,7 +92,6 @@ function Api() {
             setSearchResults([]);
         }
     };
-
 
     const handleSuggestionClick = (item) => {
         navigate(`/ApiDetails/${item.id}`);
@@ -126,66 +119,72 @@ function Api() {
                 Welcome.
                 <br />
                 Millions of movies, TV shows, and people to discover. Explore now.
-
-                <div className="box">
-                    <div className='search-box'>
-                        <input
-                            type="text"
-                            placeholder="search for a movie, tv show, person...."
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                        />
-                        <div className="search">
-                            <button onClick={handleSearch}>Search</button>
-                        </div>
-                    </div>
-
-
-                    {searchResults.length > 0 && (
-                        <div className="suggestions-dropdown">
-                            {searchResults.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="suggestion-item"
-                                    onClick={() => handleSuggestionClick(item)}
-                                >
-                                    {item.name || item.title}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
             </h1>
 
-            <Grade>
-                <div className="container-1">
-                    <h1>Trending</h1>
+
+            {/* SEARCH BAR */}
+            <div className="box">
+                <div className="search-box">
+                    <input
+                        type="text"
+                        placeholder="Search for a movie, TV show, person..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        autoFocus 
+                        
+                    />
+                    <div className="search">
+                        <button onClick={handleSearch}>Search</button>
+                    </div>
                 </div>
-                <div className="container-2">
-                    {data.map((obj, index) => (
-                        <div key={index}>
-                            <div>
-                                <Link to={`ApiDetails/${obj.id}`}>
-                                    <div className="Card">
-                                        <img
-                                            src={`https://image.tmdb.org/t/p/w500/` + obj.poster_path}
-                                            alt={obj.title || obj.name}
-                                            height={'100px'}
-                                        />
-                                    </div>
-                                </Link>
+
+                {searchResults.length > 0 && (
+                    <div className="suggestions-dropdown">
+                        {searchResults.map((item) => (
+                            <div
+                                key={item.id}
+                                className="suggestion-item"
+                                onClick={() => handleSuggestionClick(item)}
+                            >
+                                <img src={item.poster_path ? `https://image.tmdb.org/t/p/w500/` + item.poster_path : noimg} alt="" width={20} />
+                                {item.name || item.title}
                             </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+
+
+
+            <div className="container-1">
+                <h1>Trending</h1>
+            </div>
+            <div className="container-2">
+                {data.map((obj, index) => (
+                    <div key={index}>
+                        <div>
+                            <Link to={`ApiDetails/${obj.id}`}>
+                                <div className="card">
+                                    <img
+                                        src={`https://image.tmdb.org/t/p/w500/` + obj.poster_path}
+                                        alt={obj.title || obj.name}
+
+                                    />
+                                </div>
+                            </Link>
                         </div>
-                    ))}
-                </div>
-            </Grade>
+                    </div>
+                ))}
+            </div>
+
 
             <div className="product">
                 <h1>Latest Trailers</h1>
 
                 <div className="productone">
                     {trail.map((obj, index) => (
-                        <div key={index}>
+                        <div key={index} className="video-tile">
                             <div>
                                 {trailers[obj.id] && trailers[obj.id].length > 0 ? (
                                     <YouTube videoId={trailers[obj.id][0].key} opts={opts} />
@@ -197,11 +196,9 @@ function Api() {
                     ))}
                 </div>
             </div>
+
         </div>
     );
 }
 
-export default Api;
-
-
-
+export default Home;
